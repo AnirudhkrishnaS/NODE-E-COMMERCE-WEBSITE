@@ -1,0 +1,181 @@
+<div class="container pb-5">
+  <form action='/place-order' id="checkout-form" method="post">
+
+    <div class="row">
+      <h1 class="mt-4 ml-4">Enter Delivery Details</h1>
+      <div class="col-md-8 mb-4 pl-4  mt-5">
+        <div class="card mb-4">
+          <div class="card-header py-3">
+            {{!-- <h5 class="mb-0">Biling details</h5> --}}
+          </div>
+          <div class="card-body">
+            <!-- 2 column grid layout with text inputs for the first and last names -->
+            {{!-- <div class="row mb-4">
+              <div class="col">
+                <div class="form-outline">
+                  <input type="text" id="form7Example1" class="form-control" />
+                  <label class="form-label" for="form7Example1">First name</label>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-outline">
+                  <input type="text" id="pincode" name="pincode" class="form-control" />
+                  <label class="form-label">pincode</label>
+                </div>
+              </div>
+            </div> --}}
+            <div class="form-outline mb-4">
+              <input type="text" id="address" name="address" class="form-control" />
+              <label class="form-label" for="">Address</label>
+            </div>
+
+            <!-- Text input -->
+            {{!-- <div class="form-outline mb-4">
+              <input type="text" id="form7Example3" class="form-control" />
+              <label class="form-label" for="form7Example3">Company name</label>
+            </div> --}}
+
+            <!-- Text input -->
+            <div class="form-outline mb-4">
+              <input type="text" id="pincode" name="pincode" class="form-control" />
+              <label class="form-label" for="">Pincode</label>
+            </div>
+
+
+            <!-- Email input -->
+            {{!-- <div class="form-outline mb-4">
+              <input type="email" id="form7Example5" class="form-control" />
+              <label class="form-label" for="form7Example5">Email</label>
+            </div> --}}
+
+            <!-- Number input -->
+            <div class="form-outline mb-4">
+              <input type="number" id="mobile" name="mobile" class="form-control" />
+              <label class="form-label">Mobile</label>
+            </div>
+            <input type="text" name="userId" id="" value="{{user._id}}" hidden>
+
+            <!-- Message input -->
+            {{!-- <div class="form-outline mb-4">
+              <textarea class="frm-control" id="form7Example7" rows="4"></textarea>
+              <label cleass="form-labl" for="form7Example7">Additional information</loabel>
+            </div> --}}
+
+            <!-- Checkbox -->
+            {{!-- <div class="form-check d-flex justify-content-center mb-2">
+              <input class="form-check-input me-2" type="checkbox" value="" id="form7Example8" checked />
+              <label class="form-check-label" for="form7Example8">
+                Create an account?
+              </label>
+            </div> --}}
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-4">
+        <div class="card mb-4 mt-5">
+          <div class="card-header py-3">
+            <h5 class="mb-0">Total Amount : Rs.{{total.total}}</h5>
+            <hr>
+
+            <div class="payment">
+              <p>payment Method</p>
+              <label class="radio-inline">
+                <input type="radio" name="payment-method" value="COD" checked> COD
+              </label>
+              <br>
+              <label class="radio-inline">
+                <input type="radio" name="payment-method" value="ONLINE"> Online Payment
+              </label>
+
+            </div>
+          </div>
+
+          <div class="button ml-5 col-md-10 col-sm-8">
+            <button type="submit" class="btn btn-primary  mt-2 mb-2" style="width:70%;">
+              CHECKOUT
+            </button>
+  </form>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+
+<script>
+  $("#checkout-form").submit((e) => {
+    e.preventDefault()
+    $.ajax({
+      url: '/place-order',
+      method: 'post',
+      data: $('#checkout-form').serialize(),
+      success: (response) => {
+        if (response.codSuccess) {
+          location.href = '/order-success'
+        } else {
+          razorPayment(response)
+        }
+      }
+
+    })
+  })
+
+
+  function razorPayment(order) {
+    var options = {
+      "key": "", // Enter the Key ID generated from the Dashboard
+      "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      "currency": "INR",
+      "name": "Anirudh",
+      "description": "Test Transaction",
+      "image": "https://example.com/your_logo",
+      "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      "handler": function (response) {
+        {{!-- alert(response.razorpay_payment_id);
+        alert(response.razorpay_order_id);
+        alert(response.razorpay_signature); --}}
+
+        verifyPayment(response,order)
+      },
+      "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9999999999"
+      },
+      "notes": {
+        "address": "Razorpay Corporate Office"
+      },
+      "theme": {
+        "color": "#3399cc"
+      }
+    };
+
+    var rzp1 = new Razorpay(options);
+        rzp1.open();
+        e.preventDefault()
+
+
+  }
+
+
+  function verifyPayment(payment,order){
+    $.ajax({
+      url:'/verify-payment',
+      data:{
+        payment,
+        order
+      },
+      method:'post',
+      success:(response)=>{
+        if(response.status){
+          location.href = '/order-success'
+        }else{
+          alert("payment failed")
+        }
+      }
+    })
+  }
+</script>

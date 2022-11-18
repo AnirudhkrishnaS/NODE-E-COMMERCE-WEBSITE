@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <title>SHOPPING CART</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-info">
+      <a class="navbar-brand" href="/">SHOPPING CART</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Products <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/cart">cart<span class="badge badge-danger" id="cart-count">{{cartCount}}</span></a>
+          </li>
+          {{#if user}}
+          <li class="nav-item">
+            <a class="nav-link" href="/orders">orders</a>
+          </li>
+          {{/if}}
+          {{!-- <li class="nav-item">
+            <a class="nav-link" href="#">cart</a>
+          </li> --}}
+
+
+        </ul>
+        <div class="dropdown px-4 pt-2">
+          <button class="btn btn-warning  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            {{#if user}}
+            {{user.Name}}
+            {{else}}
+            Account
+            {{/if}}
+          </button>
+          <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
+            {{#if user}}
+            <a class="dropdown-item " href="/logout">Logout</a>
+            {{else}}
+            <a class="dropdown-item" href="/login">Login</a>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
